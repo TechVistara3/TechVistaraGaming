@@ -451,7 +451,7 @@ footer{text-align:center;padding:28px 24px 36px;color:var(--muted);font-size:11p
           <span id="btnText">&#x1F3AE; &nbsp;JOIN THE BATTLE &nbsp;&#x25B6;</span>
           <div class="spinner" id="spinner"></div>
         </button>
-        <div class="submit-note">// Registration closes 25 March 2026 &nbsp;&#x2022;&nbsp; Confirmation after payment verification //</div>
+        <div class="submit-note">// Registration closes 25 March 2026 &nbsp;&#x2022;&nbsp; Check your email for confirmation //</div>
       </div>
     </div>
   </div>
@@ -529,8 +529,8 @@ footer{text-align:center;padding:28px 24px 36px;color:var(--muted);font-size:11p
       <div class="coord-group male" style="clip-path:none;">
         <div class="coord-group-title">&#x1F3AE; EVENT COORDINATORS</div>
         <div class="coord-person"><div class="coord-avatar">&#x1F468;</div><div><div class="coord-name">Imran Khan</div><div class="coord-phone"><a href="tel:8880543438">8880543438</a></div></div></div>
-        <div class="coord-person"><div class="coord-avatar">&#x1F468;</div><div><div class="coord-name">Nithish</div><div class="coord-phone"><a href="tel:9980776157">8431216296</a></div></div></div>
-        <div class="coord-person"><div class="coord-avatar">&#x1F468;</div><div><div class="coord-name">Nithyananda</div><div class="coord-phone"><a href="tel:8431216296">9980776157</a></div></div></div>
+         <div class="coord-person"><div class="coord-avatar">&#x1F468;</div><div><div class="coord-name">Nithish</div><div class="coord-phone"><a href="tel:8431216296">8431216296</a></div></div></div>
+        <div class="coord-person"><div class="coord-avatar">&#x1F468;</div><div><div class="coord-name">Nithyananda</div><div class="coord-phone"><a href="tel:9980776157">9980776157</a></div></div></div>
         <div class="coord-person"><div class="coord-avatar">&#x1F468;</div><div><div class="coord-name">Ravi</div><div class="coord-phone"><a href="tel:8431216296">7090376964</a></div></div></div>
       </div>
     </div>
@@ -544,7 +544,7 @@ footer{text-align:center;padding:28px 24px 36px;color:var(--muted);font-size:11p
     <div class="modal-title">LOCKED IN!</div>
     <p class="modal-sub" id="successMsg">Registration received!</p>
     <div class="modal-id" id="modalId">REG ID: --</div><br>
-    <div class="modal-pending" id="modalPending">&#x23F3; &nbsp;Pending payment confirmation. You will receive email once confirmed.</div>
+    <div class="modal-pending" id="modalPending">&#x2709; &nbsp;Confirmation email sent to your inbox!</div>
   </div>
 </div>
 
@@ -554,6 +554,7 @@ footer{text-align:center;padding:28px 24px 36px;color:var(--muted);font-size:11p
 var EJS_PUBLIC_KEY = 'Dzzl9VfrZ0QoHZsVq';
 var EJS_SERVICE_ID = 'service_8qqj4n7';
 var EJS_ADMIN_TEMPLATE_ID = 'template_i1l7pnd';
+var EJS_STUDENT_TEMPLATE_ID = 'YOUR_GAMING_STUDENT_TEMPLATE';
 var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz8mqvwr-fqGeRWUguHpXPcUg2JJJJropH6T9bGosZ3JMXeJ-s8esY25v6-kbjt8sDceg/exec';
 
 function openRound(n){document.getElementById('rmodal'+n).classList.add('show');document.body.style.overflow='hidden';}
@@ -636,16 +637,30 @@ function handleSubmit(){
   // Save to Google Sheets
   fetch(SHEETS_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(params)}).catch(function(){});
 
-  // Only admin email — NO student email until confirmed
+  // Send admin + student emails immediately
   emailjs.init(EJS_PUBLIC_KEY);
   emailjs.send(EJS_SERVICE_ID, EJS_ADMIN_TEMPLATE_ID, params).catch(function(e){console.warn('Admin email error:', e);});
+  if(EJS_STUDENT_TEMPLATE_ID !== 'YOUR_GAMING_STUDENT_TEMPLATE'){
+    emailjs.send(EJS_SERVICE_ID, EJS_STUDENT_TEMPLATE_ID, {
+      to_email: leaderEmail,
+      to_name: leaderName,
+      reg_id: regId,
+      team_name: teamName,
+      p1_ign: p1ig,
+      p2_name: p2n,
+      p2_ign: p2ig,
+      payment_mode: params.payment_mode,
+      event_date: '27 March 2026',
+      venue: 'SMD College'
+    }).catch(function(e){console.warn('Student email error:', e);});
+  }
 
   registeredTeams.push(teamName.toLowerCase());
 
   document.getElementById('modalId').textContent = 'REG ID: ' + regId;
   document.getElementById('successMsg').textContent = isOffline
-    ? 'Registration received! Pay Rs.100 cash at the venue. You will receive confirmation email once payment is verified.'
-    : 'Registration received! Payment under verification. You will receive confirmation email once verified.';
+    ? 'Registration received! Pay Rs.100 cash at the venue. See you on the battlefield!'
+    : 'Registration received! We will verify payment and confirm. See you on the battlefield!';
   document.getElementById('successModal').classList.add('show');
 }
 </script>
