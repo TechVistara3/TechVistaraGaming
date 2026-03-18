@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — TECH VISTARA GAMING</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+:root{
+  --bg:#020408;--surface:#080f1a;--card:#0a1628;
+  --accent:#00ff88;--accent2:#ff3d00;--accent3:#ffd700;
+  --blue:#00d4ff;--text:#e8f4ff;--muted:#4a6080;
+  --red:#ff3d00;--green:#00ff88;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;padding:24px;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+.header{text-align:center;margin-bottom:32px;position:relative;z-index:1;}
+.header h1{font-family:'Orbitron',sans-serif;font-size:24px;color:var(--accent);letter-spacing:4px;font-weight:700;}
+.header p{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:2px;}
+
+.login-box{max-width:400px;margin:80px auto;background:var(--card);border:1px solid rgba(0,255,136,0.2);padding:32px;position:relative;z-index:1;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));}
+.login-box h2{font-family:'Orbitron',sans-serif;font-size:16px;color:var(--accent);letter-spacing:3px;margin-bottom:20px;}
+.login-box input{width:100%;background:var(--surface);border:1px solid rgba(0,255,136,0.15);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:14px;padding:12px 16px;outline:none;margin-bottom:12px;transition:border-color 0.2s;}
+.login-box input:focus{border-color:var(--accent);}
+.login-btn{width:100%;background:var(--accent);color:#000;border:none;padding:12px;font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:2px;font-weight:700;cursor:pointer;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
+.login-btn:hover{background:#00cc6a;}
+.error-msg{color:var(--red);font-family:'Share Tech Mono',monospace;font-size:11px;margin-top:8px;display:none;}
+
+.panel{display:none;position:relative;z-index:1;max-width:1100px;margin:0 auto;}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--card);border:1px solid rgba(0,255,136,0.12);padding:16px;text-align:center;}
+.stat-num{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:700;color:var(--accent);}
+.stat-num.orange{color:var(--accent2);}
+.stat-num.gold{color:var(--accent3);}
+.stat-num.blue{color:var(--blue);}
+.stat-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:4px;}
+
+.filter-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.filter-btn{background:var(--surface);border:1px solid rgba(0,255,136,0.15);color:var(--muted);padding:8px 16px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;}
+.filter-btn.active{background:rgba(0,255,136,0.1);border-color:var(--accent);color:var(--accent);}
+.filter-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+.reg-list{display:grid;gap:12px;}
+.reg-card{background:var(--card);border:1px solid rgba(0,255,136,0.1);padding:20px;position:relative;overflow:hidden;}
+.reg-card.pending{border-left:3px solid var(--accent2);}
+.reg-card.confirmed{border-left:3px solid var(--accent);}
+.reg-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.reg-id{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:2px;}
+.reg-status{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:4px 10px;border-radius:2px;}
+.reg-status.pending{background:rgba(255,61,0,0.1);color:var(--accent2);border:1px solid rgba(255,61,0,0.3);}
+.reg-status.confirmed{background:rgba(0,255,136,0.1);color:var(--accent);border:1px solid rgba(0,255,136,0.3);}
+.reg-team{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:1px;}
+.reg-college{font-size:13px;color:var(--muted);margin-bottom:10px;}
+.reg-details{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.reg-detail-item{background:var(--surface);border:1px solid rgba(255,255,255,0.05);padding:8px 12px;}
+.detail-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;margin-bottom:3px;}
+.detail-val{font-size:13px;color:var(--text);font-weight:600;}
+.players-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.player-mini{background:var(--surface);border:1px solid rgba(0,255,136,0.08);padding:10px 12px;border-left:2px solid var(--accent);}
+.player-mini.p2{border-left-color:var(--blue);}
+.player-mini-tag{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--accent);letter-spacing:2px;margin-bottom:6px;}
+.player-mini.p2 .player-mini-tag{color:var(--blue);}
+.player-mini-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.player-mini-ign{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent3);}
+.player-mini-contact{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);margin-top:4px;}
+.reg-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-confirm{background:linear-gradient(135deg,var(--accent),#00cc6a);color:#000;border:none;padding:10px 20px;font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;transition:all 0.2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
+.btn-confirm:hover{box-shadow:0 4px 20px rgba(0,255,136,0.3);}
+.btn-confirm:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-reject{background:rgba(255,61,0,0.1);color:var(--accent2);border:1px solid rgba(255,61,0,0.3);padding:10px 20px;font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.btn-reject:hover{background:rgba(255,61,0,0.2);}
+.confirmed-badge{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);padding:8px 16px;display:inline-block;}
+
+.empty-state{text-align:center;padding:60px;font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--muted);}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#000;padding:12px 24px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;font-weight:700;z-index:1000;transform:translateY(100px);transition:transform 0.3s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
+.toast.show{transform:translateY(0);}
+.toast.error{background:var(--accent2);color:#fff;}
+
+@media(max-width:600px){
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .reg-details{grid-template-columns:1fr;}
+  .players-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>// ADMIN PANEL //</h1>
+  <p>TECH VISTARA GAMING &nbsp;&#x2022;&nbsp; BGMI TOURNAMENT &nbsp;&#x2022;&nbsp; 27 MARCH 2026</p>
+</div>
+
+<!-- LOGIN -->
+<div class="login-box" id="loginBox">
+  <h2>&#x1F512; ACCESS REQUIRED</h2>
+  <input type="password" id="adminPass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkLogin()">
+  <button class="login-btn" onclick="checkLogin()">LOGIN &#x25B6;</button>
+  <div class="error-msg" id="loginError">// INVALID PASSWORD — ACCESS DENIED</div>
+</div>
+
+<!-- PANEL -->
+<div class="panel" id="adminPanel">
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="totalCount">0</div><div class="stat-label">TOTAL REGISTRATIONS</div></div>
+    <div class="stat-card"><div class="stat-num orange" id="pendingCount">0</div><div class="stat-label">PENDING</div></div>
+    <div class="stat-card"><div class="stat-num" id="confirmedCount">0</div><div class="stat-label">CONFIRMED</div></div>
+    <div class="stat-card"><div class="stat-num gold" id="revenueCount">0</div><div class="stat-label">EXPECTED REVENUE</div></div>
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterRegs('all',this)">ALL</button>
+    <button class="filter-btn" onclick="filterRegs('pending',this)">PENDING</button>
+    <button class="filter-btn" onclick="filterRegs('confirmed',this)">CONFIRMED</button>
+    <button class="filter-btn" style="margin-left:auto;border-color:rgba(0,212,255,0.3);color:var(--blue);" onclick="loadFromSheets()">&#x21BB; REFRESH</button>
+  </div>
+
+  <div class="reg-list" id="regList">
+    <div class="empty-state">// Loading registrations...</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var ADMIN_PASSWORD = 'tvgaming2026';
+var EJS_PUBLIC_KEY = 'Dzzl9VfrZ0QoHZsVq';
+var EJS_SERVICE_ID = 'service_8qqj4n7';
+var EJS_STUDENT_TEMPLATE_ID = 'template_bc6ntpb';
+var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz8mqvwr-fqGeRWUguHpXPcUg2JJJJropH6T9bGosZ3JMXeJ-s8esY25v6-kbjt8sDceg/exec';
+
+var allRegs = [];
+var currentFilter = 'all';
+var confirmedIds = JSON.parse(localStorage.getItem('tvg_confirmed') || '[]');
+
+function checkLogin(){
+  var pass = document.getElementById('adminPass').value;
+  if(pass === ADMIN_PASSWORD){
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadFromSheets();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('adminPass').style.borderColor = 'var(--red)';
+  }
+}
+
+function showToast(msg, isError){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(function(){t.className = 'toast';}, 3000);
+}
+
+function loadFromSheets(){
+  document.getElementById('regList').innerHTML = '<div class="empty-state">// Fetching registrations from database...</div>';
+  
+  fetch(SHEETS_URL + '?action=getGaming', {method:'GET', mode:'no-cors'})
+    .then(function(){
+      showSampleData();
+    })
+    .catch(function(){
+      showSampleData();
+    });
+}
+
+function showSampleData(){
+  // Since no-cors doesn't return data, show stored + instructions
+  if(allRegs.length === 0){
+    document.getElementById('regList').innerHTML = '<div class="empty-state">// No registrations yet — or open Google Sheets to view data.<br><br>As registrations come in, add them here manually or check Google Sheets directly.</div>';
+  }
+  updateStats();
+}
+
+function addRegistration(reg){
+  // Check if already exists
+  for(var i=0;i<allRegs.length;i++){
+    if(allRegs[i].reg_id === reg.reg_id) return;
+  }
+  if(confirmedIds.indexOf(reg.reg_id) !== -1) reg.status = 'confirmed';
+  else reg.status = 'pending';
+  allRegs.push(reg);
+  renderList();
+  updateStats();
+}
+
+function renderList(){
+  var list = document.getElementById('regList');
+  var filtered = allRegs.filter(function(r){
+    if(currentFilter === 'all') return true;
+    return r.status === currentFilter;
+  });
+
+  if(filtered.length === 0){
+    list.innerHTML = '<div class="empty-state">// No registrations found</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(function(reg){
+    var isConfirmed = reg.status === 'confirmed';
+    return '<div class="reg-card ' + (isConfirmed ? 'confirmed' : 'pending') + '" id="card-' + reg.reg_id + '">' +
+      '<div class="reg-card-top">' +
+        '<div>' +
+          '<div class="reg-id">' + reg.reg_id + '</div>' +
+          '<div class="reg-team">' + reg.team_name + '</div>' +
+          '<div class="reg-college">' + reg.college + '</div>' +
+        '</div>' +
+        '<span class="reg-status ' + (isConfirmed ? 'confirmed' : 'pending') + '">' + (isConfirmed ? '&#x2713; CONFIRMED' : '&#x23F3; PENDING') + '</span>' +
+      '</div>' +
+      '<div class="reg-details">' +
+        '<div class="reg-detail-item"><div class="detail-label">PAYMENT MODE</div><div class="detail-val">' + reg.payment_mode + '</div></div>' +
+        '<div class="reg-detail-item"><div class="detail-label">TXN ID</div><div class="detail-val">' + (reg.txn_id || 'N/A') + '</div></div>' +
+      '</div>' +
+      '<div class="players-row">' +
+        '<div class="player-mini">' +
+          '<div class="player-mini-tag">PLAYER 1 — LEADER</div>' +
+          '<div class="player-mini-name">' + reg.p1_name + '</div>' +
+          '<div class="player-mini-ign">IGN: ' + reg.p1_ign + '</div>' +
+          '<div class="player-mini-contact">' + reg.p1_phone + ' &bull; ' + reg.p1_email + '</div>' +
+        '</div>' +
+        '<div class="player-mini p2">' +
+          '<div class="player-mini-tag">PLAYER 2</div>' +
+          '<div class="player-mini-name">' + reg.p2_name + '</div>' +
+          '<div class="player-mini-ign">IGN: ' + reg.p2_ign + '</div>' +
+          '<div class="player-mini-contact">' + reg.p2_phone + ' &bull; ' + reg.p2_email + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="reg-actions">' +
+        (isConfirmed
+          ? '<div class="confirmed-badge">&#x2713; PAYMENT CONFIRMED — EMAIL SENT</div>'
+          : '<button class="btn-confirm" onclick="confirmReg(\'' + reg.reg_id + '\')">&#x2713; CONFIRM PAYMENT &amp; SEND EMAIL</button>' +
+            '<button class="btn-reject" onclick="rejectReg(\'' + reg.reg_id + '\')">&#x2715; REJECT</button>'
+        ) +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function confirmReg(regId){
+  var reg = allRegs.find(function(r){return r.reg_id === regId;});
+  if(!reg) return;
+
+  var btn = document.querySelector('#card-' + regId + ' .btn-confirm');
+  if(btn){btn.disabled = true; btn.textContent = 'SENDING...';}
+
+  emailjs.init(EJS_PUBLIC_KEY);
+  emailjs.send(EJS_SERVICE_ID, EJS_STUDENT_TEMPLATE_ID, {
+    to_email: reg.p1_email,
+    to_name: reg.p1_name,
+    reg_id: reg.reg_id,
+    team_name: reg.team_name,
+    p1_ign: reg.p1_ign,
+    p2_name: reg.p2_name,
+    p2_ign: reg.p2_ign,
+    payment_mode: reg.payment_mode,
+    event_date: '27 March 2026',
+    venue: 'SMD College'
+  }).then(function(){
+    reg.status = 'confirmed';
+    confirmedIds.push(regId);
+    localStorage.setItem('tvg_confirmed', JSON.stringify(confirmedIds));
+    renderList();
+    updateStats();
+    showToast('> EMAIL SENT TO ' + reg.p1_email);
+  }).catch(function(e){
+    console.warn('Email error:', e);
+    if(btn){btn.disabled = false; btn.textContent = '> CONFIRM PAYMENT & SEND EMAIL';}
+    showToast('> EMAIL FAILED — Check EmailJS template', true);
+  });
+}
+
+function rejectReg(regId){
+  if(!confirm('Remove this registration?')) return;
+  allRegs = allRegs.filter(function(r){return r.reg_id !== regId;});
+  renderList();
+  updateStats();
+  showToast('> REGISTRATION REMOVED');
+}
+
+function filterRegs(filter, btn){
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderList();
+}
+
+function updateStats(){
+  var total = allRegs.length;
+  var pending = allRegs.filter(function(r){return r.status==='pending';}).length;
+  var confirmed = allRegs.filter(function(r){return r.status==='confirmed';}).length;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('pendingCount').textContent = pending;
+  document.getElementById('confirmedCount').textContent = confirmed;
+  document.getElementById('revenueCount').textContent = 'Rs.' + (total * 100);
+}
+
+// Manual add form for entries from Google Sheets
+document.addEventListener('DOMContentLoaded', function(){
+  // Add a manual entry button
+  var panel = document.getElementById('adminPanel');
+  var manualBtn = document.createElement('div');
+  manualBtn.style.cssText = 'text-align:right;margin-bottom:12px;';
+  manualBtn.innerHTML = '<button onclick="showManualAdd()" style="background:rgba(0,212,255,0.1);color:var(--blue);border:1px solid rgba(0,212,255,0.3);padding:8px 16px;font-family:Share Tech Mono,monospace;font-size:10px;letter-spacing:2px;cursor:pointer;">+ ADD FROM SHEETS</button>';
+  panel.insertBefore(manualBtn, panel.querySelector('.filter-row'));
+});
+
+function showManualAdd(){
+  var json = prompt('Paste registration JSON (from Google Sheets):\n\nFormat: {"reg_id":"TVG123","team_name":"...","college":"...","payment_mode":"...","txn_id":"...","p1_name":"...","p1_ign":"...","p1_phone":"...","p1_email":"...","p2_name":"...","p2_ign":"...","p2_phone":"...","p2_email":"..."}');
+  if(!json) return;
+  try {
+    var reg = JSON.parse(json);
+    addRegistration(reg);
+    showToast('> REGISTRATION ADDED');
+  } catch(e) {
+    showToast('> INVALID JSON FORMAT', true);
+  }
+}
+</script>
+</body>
+</html>

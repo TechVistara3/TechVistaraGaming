@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — TECH VISTARA GAMING</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+:root{
+  --bg:#020408;--surface:#080f1a;--card:#0a1628;
+  --accent:#00ff88;--accent2:#ff3d00;--accent3:#ffd700;
+  --blue:#00d4ff;--purple:#9d4edd;
+  --text:#e8f4ff;--muted:#4a6080;--border:rgba(0,255,136,0.2);
+  --red:#ff3d00;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden;min-height:100vh;}
+
+/* SCANLINE EFFECT */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,0.015) 2px,rgba(0,255,136,0.015) 4px);pointer-events:none;z-index:0;}
+/* GRID */
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
+.orb1{width:600px;height:600px;background:rgba(0,255,136,0.05);top:-200px;right:-200px;}
+.orb2{width:500px;height:500px;background:rgba(255,61,0,0.05);bottom:-100px;left:-200px;}
+.orb3{width:400px;height:400px;background:rgba(0,212,255,0.04);top:40%;left:30%;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes modalPop{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes glitch{0%,100%{transform:translate(0);}20%{transform:translate(-2px,2px);}40%{transform:translate(2px,-2px);}60%{transform:translate(-1px,1px);}80%{transform:translate(1px,-1px);}}
+@keyframes scan{0%{transform:translateY(-100%);}100%{transform:translateY(100vh);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+@keyframes shimmer{0%{background-position:0% center;}100%{background-position:200% center;}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+.anim-1{animation:fadeUp 0.6s ease both;}
+.anim-2{animation:fadeUp 0.6s ease 0.1s both;}
+.anim-3{animation:fadeUp 0.6s ease 0.2s both;}
+.anim-4{animation:fadeUp 0.6s ease 0.3s both;}
+.anim-5{animation:fadeUp 0.6s ease 0.4s both;}
+.anim-6{animation:fadeUp 0.6s ease 0.5s both;}
+
+/* SCAN LINE MOVING */
+.scanline{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(0,255,136,0.3),transparent);animation:scan 4s linear infinite;z-index:1;pointer-events:none;}
+
+/* BACK BTN */
+.back-btn{position:fixed;top:20px;left:20px;z-index:50;display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:4px;padding:8px 16px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent);text-decoration:none;transition:all 0.25s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
+.back-btn:hover{background:rgba(0,255,136,0.1);box-shadow:0 0 20px rgba(0,255,136,0.2);}
+
+/* HERO */
+.hero{text-align:center;padding:80px 24px 48px;position:relative;z-index:1;}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--accent);border:1px solid rgba(0,255,136,0.3);background:rgba(0,255,136,0.05);padding:8px 20px;margin-bottom:28px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
+.hero-tag::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 1s ease infinite;}
+.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(36px,8vw,88px);line-height:0.95;letter-spacing:4px;font-weight:900;}
+.hero-title .line1{color:var(--text);display:block;}
+.hero-title .line2{display:block;background:linear-gradient(90deg,#00ff88,#00d4ff,#ffd700,#ff3d00);background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;}
+.hero-title .line3{display:block;color:var(--accent);font-size:0.55em;letter-spacing:8px;margin-top:4px;}
+.hero-sub{font-size:15px;color:var(--muted);margin-top:16px;font-family:'Share Tech Mono',monospace;letter-spacing:2px;}
+.hero-sub span{color:var(--accent2);}
+
+.info-pills{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.info-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.15);padding:8px 16px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));}
+.info-pill .val{color:var(--accent);font-weight:700;}
+.info-pill.hot{border-color:rgba(255,61,0,0.3);background:rgba(255,61,0,0.05);}
+.info-pill.hot .val{color:var(--accent2);}
+
+/* ROUNDS */
+.rounds-section{padding:48px 0 24px;position:relative;z-index:1;}
+.sec-heading{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;color:var(--accent);text-align:center;margin-bottom:8px;}
+.sec-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:32px;font-family:'Share Tech Mono',monospace;}
+
+.rounds-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:860px;margin:0 auto;padding:0 24px;}
+.round-card{background:var(--card);border:1px solid rgba(0,255,136,0.1);padding:24px;position:relative;overflow:hidden;transition:all 0.3s;cursor:pointer;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));}
+.round-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.round-card:nth-child(1)::before{background:linear-gradient(90deg,var(--accent),transparent);}
+.round-card:nth-child(2)::before{background:linear-gradient(90deg,var(--accent2),transparent);}
+.round-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,255,136,0.1);}
+.round-card:nth-child(1):hover{border-color:rgba(0,255,136,0.3);}
+.round-card:nth-child(2):hover{border-color:rgba(255,61,0,0.3);}
+.round-num{font-family:'Orbitron',sans-serif;font-size:52px;color:rgba(255,255,255,0.03);position:absolute;top:8px;right:12px;line-height:1;font-weight:900;}
+.round-icon{font-size:28px;margin-bottom:10px;}
+.round-name{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--text);letter-spacing:1px;}
+.round-subtitle{font-size:10px;font-family:'Share Tech Mono',monospace;margin-top:4px;letter-spacing:2px;}
+.round-card:nth-child(1) .round-subtitle{color:var(--accent);}
+.round-card:nth-child(2) .round-subtitle{color:var(--accent2);}
+.round-desc{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6;}
+.click-hint{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:9px;font-family:'Share Tech Mono',monospace;color:var(--muted);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:4px 10px;}
+
+/* ROUND MODALS */
+.rmodal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:100;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;backdrop-filter:blur(8px);}
+.rmodal-overlay.show{display:flex;}
+.rmodal{background:var(--card);border:1px solid rgba(0,255,136,0.2);max-width:680px;width:100%;margin:auto;position:relative;overflow:hidden;animation:modalPop 0.4s cubic-bezier(.175,.885,.32,1.275) both;clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));}
+.rmodal-top{height:3px;}
+.rmodal-top.g1{background:linear-gradient(90deg,var(--accent),var(--blue));}
+.rmodal-top.g2{background:linear-gradient(90deg,var(--accent2),#ff8c00);}
+.rmodal-header{padding:24px 28px 18px;border-bottom:1px solid rgba(255,255,255,0.06);}
+.rmodal-round-tag{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;margin-bottom:6px;}
+.rmodal-title{font-family:'Orbitron',sans-serif;font-size:28px;letter-spacing:2px;line-height:1;font-weight:700;}
+.rmodal-body{padding:20px 28px 28px;max-height:70vh;overflow-y:auto;}
+.rmodal-body::-webkit-scrollbar{width:4px;}
+.rmodal-body::-webkit-scrollbar-thumb{background:rgba(0,255,136,0.2);border-radius:2px;}
+.rmodal-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--text);width:32px;height:32px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.rmodal-close:hover{background:rgba(255,61,0,0.2);border-color:var(--accent2);}
+
+.g-sub-round{background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-left:3px solid var(--accent);padding:16px 18px;margin-bottom:12px;}
+.g-sub-round.red{border-left-color:var(--accent2);}
+.g-sub-title{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;margin-bottom:8px;color:var(--text);letter-spacing:1px;}
+.g-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.g-info-chip{background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.1);padding:8px 12px;text-align:center;}
+.g-chip-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px;}
+.g-chip-val{font-size:13px;font-weight:700;color:var(--accent);font-family:'Orbitron',sans-serif;}
+.g-chip-val.red{color:var(--accent2);}
+.g-chip-val.gold{color:var(--accent3);}
+.g-rule-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+.g-rule-list li{font-size:13px;color:var(--muted);padding-left:20px;position:relative;line-height:1.6;}
+.g-rule-list li::before{content:'>';position:absolute;left:0;color:var(--accent);font-family:'Share Tech Mono',monospace;}
+.g-modal-important{background:rgba(255,61,0,0.06);border:1px solid rgba(255,61,0,0.2);padding:14px 18px;margin-top:16px;}
+.g-imp-title{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent2);margin-bottom:8px;}
+.g-modal-desc{font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:14px;}
+
+/* FORM */
+.form-section{padding:40px 0 60px;position:relative;z-index:1;}
+.form-wrap{max-width:860px;margin:0 auto;padding:0 24px;}
+.form-card{background:var(--card);border:1px solid rgba(0,255,136,0.15);overflow:hidden;clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));}
+.form-card-top{height:3px;background:linear-gradient(90deg,var(--accent),var(--blue),var(--accent2));}
+.form-header{padding:28px 36px 22px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.form-header h2{font-family:'Orbitron',sans-serif;font-size:28px;letter-spacing:2px;line-height:1;font-weight:700;}
+.form-header h2 span{color:var(--accent);}
+.form-header p{color:var(--muted);font-size:13px;margin-top:6px;font-family:'Share Tech Mono',monospace;letter-spacing:1px;}
+.form-body{padding:28px 36px;}
+
+label{display:block;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent);margin-bottom:8px;}
+input,select{width:100%;background:var(--surface);border:1px solid rgba(0,255,136,0.12);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;padding:12px 16px;outline:none;transition:all 0.25s;-webkit-appearance:none;appearance:none;}
+input::placeholder{color:var(--muted);}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,255,136,0.1),inset 0 0 20px rgba(0,255,136,0.03);}
+select option{background:var(--surface);}
+.field{margin-bottom:0;}
+.field.err input,.field.err select{border-color:var(--red)!important;box-shadow:0 0 0 2px rgba(255,61,0,0.15)!important;}
+.err-msg{font-size:10px;color:var(--red);font-family:'Share Tech Mono',monospace;margin-top:5px;display:none;letter-spacing:1px;}
+.field.err .err-msg{display:block;}
+.field-row{display:grid;gap:16px;margin-bottom:16px;}
+.c2{grid-template-columns:1fr 1fr;}
+
+.sec-div{display:flex;align-items:center;gap:14px;margin:24px 0 18px;}
+.sec-lbl{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:4px;white-space:nowrap;flex-shrink:0;color:var(--accent);}
+.sec-lbl.red{color:var(--accent2);}
+.sec-lbl.gold{color:var(--accent3);}
+.sec-line{flex:1;height:1px;background:rgba(0,255,136,0.1);}
+
+.player-card{background:var(--surface);border:1px solid rgba(0,255,136,0.08);border-left:3px solid var(--accent);padding:18px;margin-bottom:10px;transition:all 0.25s;}
+.player-card.player2{border-left-color:var(--blue);}
+.player-card:focus-within{box-shadow:0 0 20px rgba(0,255,136,0.06);}
+.ptag{display:inline-flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:4px 12px;margin-bottom:12px;font-weight:700;}
+.ptag.p1{background:rgba(0,255,136,0.1);color:var(--accent);border:1px solid rgba(0,255,136,0.2);}
+.ptag.p2{background:rgba(0,212,255,0.1);color:var(--blue);border:1px solid rgba(0,212,255,0.2);}
+.mf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* PAYMENT */
+input[type=radio]{display:none;}
+.pay-toggle{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;}
+.pay-opt{background:var(--surface);border:2px solid rgba(255,255,255,0.07);padding:18px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;display:block;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
+.pay-opt:hover{border-color:rgba(0,255,136,0.3);}
+#radio-online:checked ~ .pay-toggle label[for="radio-online"],
+#radio-offline:checked ~ .pay-toggle label[for="radio-offline"]{border-color:var(--accent);background:rgba(0,255,136,0.06);box-shadow:0 0 20px rgba(0,255,136,0.1);}
+#radio-online:checked ~ .pay-toggle label[for="radio-online"]::after,
+#radio-offline:checked ~ .pay-toggle label[for="radio-offline"]::after{content:">>";position:absolute;top:10px;right:12px;font-size:11px;color:var(--accent);font-family:'Share Tech Mono',monospace;}
+.pay-opt-icon{font-size:24px;margin-bottom:8px;}
+.pay-opt-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;color:var(--text);letter-spacing:1px;}
+.pay-opt-sub{font-size:10px;color:var(--muted);margin-top:2px;font-family:'Share Tech Mono',monospace;}
+#panel-online{display:block;}
+#panel-offline{display:none;}
+#radio-offline:checked ~ #panel-online{display:none;}
+#radio-offline:checked ~ #panel-offline{display:block;}
+#radio-online:checked ~ #panel-online{display:block;}
+#radio-online:checked ~ #panel-offline{display:none;}
+
+.pay-grid{display:grid;grid-template-columns:160px 1fr;gap:20px;align-items:start;margin-top:16px;}
+.qr-card{background:var(--surface);border:1px solid rgba(0,255,136,0.15);padding:14px;text-align:center;}
+.qr-area{width:100%;aspect-ratio:1;background:rgba(0,255,136,0.03);border:2px dashed rgba(0,255,136,0.2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:10px;padding:10px;line-height:1.6;}
+.qr-fee{font-family:'Orbitron',sans-serif;font-size:22px;color:var(--accent);line-height:1;font-weight:700;}
+.qr-sub{font-size:9px;color:var(--muted);font-family:'Share Tech Mono',monospace;letter-spacing:2px;}
+.upload-box{border:2px dashed rgba(0,212,255,0.2);padding:18px;text-align:center;cursor:pointer;position:relative;transition:all 0.2s;margin-top:12px;}
+.upload-box:hover,.upload-box:focus-within{border-color:var(--blue);background:rgba(0,212,255,0.03);}
+.upload-box.done{border-color:var(--accent);background:rgba(0,255,136,0.03);}
+.upload-box input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;border:none!important;padding:0!important;background:none!important;box-shadow:none!important;}
+.upload-fname{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);margin-top:8px;display:none;}
+.offline-box{background:rgba(255,61,0,0.04);border:1px solid rgba(255,61,0,0.2);padding:24px;margin-top:16px;text-align:center;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));}
+.offline-icon{font-size:36px;margin-bottom:10px;}
+.offline-title{font-family:'Orbitron',sans-serif;font-size:20px;letter-spacing:2px;color:var(--accent2);margin-bottom:10px;}
+.offline-desc{font-size:13px;color:var(--muted);line-height:1.8;font-family:'Rajdhani',sans-serif;}
+
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--accent),#00cc6a);color:#000;border:none;padding:18px;font-family:'Orbitron',sans-serif;font-size:18px;letter-spacing:3px;font-weight:700;cursor:pointer;transition:all 0.25s;margin-top:24px;display:flex;align-items:center;justify-content:center;gap:10px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));}
+.submit-btn:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(0,255,136,0.4);}
+.submit-btn:active{transform:translateY(-1px);}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+.submit-note{text-align:center;font-size:11px;color:var(--muted);margin-top:10px;font-family:'Share Tech Mono',monospace;letter-spacing:1px;}
+.spinner{width:18px;height:18px;border:2px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
+
+/* RULES SECTION */
+.rules-section{position:relative;z-index:1;padding:10px 0 40px;}
+.rules-wrap{max-width:860px;margin:0 auto;padding:0 24px;}
+.rules-card{background:var(--card);border:1px solid rgba(0,255,136,0.1);overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));}
+.rules-top{height:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3),var(--accent));}
+.rules-body{padding:28px 32px;display:grid;gap:12px;}
+.rule-item{background:var(--surface);border:1px solid rgba(255,255,255,0.05);border-left:3px solid var(--accent);padding:14px 18px;display:flex;gap:14px;align-items:flex-start;}
+.rule-item.red{border-left-color:var(--accent2);}
+.rule-item.gold{border-left-color:var(--accent3);}
+.rule-item.blue{border-left-color:var(--blue);}
+.rule-num{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--accent);flex-shrink:0;line-height:1;min-width:36px;font-weight:700;}
+.rule-item.red .rule-num{color:var(--accent2);}
+.rule-item.gold .rule-num{color:var(--accent3);}
+.rule-item.blue .rule-num{color:var(--blue);}
+.rule-title{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:1px;}
+.rule-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+
+/* PRIZE */
+.prize-section{position:relative;z-index:1;padding:10px 0 60px;}
+.prize-wrap{max-width:860px;margin:0 auto;padding:0 24px;}
+
+/* COORD */
+.coord-section{position:relative;z-index:1;padding:10px 0 60px;}
+.coord-wrap{max-width:860px;margin:0 auto;padding:0 24px;}
+.coord-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.coord-group{background:var(--card);border:1px solid rgba(0,255,136,0.1);padding:22px;overflow:hidden;position:relative;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));}
+.coord-group::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.coord-group.male::before{background:linear-gradient(90deg,var(--accent),transparent);}
+.coord-group.female::before{background:linear-gradient(90deg,#f472b6,transparent);}
+.coord-group-title{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;margin-bottom:14px;}
+.coord-group.male .coord-group-title{color:var(--accent);}
+.coord-group.female .coord-group-title{color:#f472b6;}
+.coord-person{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.coord-person:last-child{border-bottom:none;padding-bottom:0;}
+.coord-avatar{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.15);}
+.coord-group.female .coord-avatar{background:rgba(244,114,182,0.06);border-color:rgba(244,114,182,0.15);}
+.coord-name{font-weight:700;font-size:14px;color:var(--text);font-family:'Rajdhani',sans-serif;}
+.coord-phone a{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;margin-top:2px;display:block;}
+.coord-group.female .coord-phone a{color:#f472b6;}
+
+/* SUCCESS MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(2,4,8,0.98);z-index:300;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.modal.show{display:flex;}
+.modal-inner{animation:modalPop 0.5s cubic-bezier(.175,.885,.32,1.275) both;max-width:480px;width:100%;}
+.modal-emoji{font-size:72px;margin-bottom:16px;display:block;animation:float 3s ease-in-out infinite;}
+.modal-title{font-family:'Orbitron',sans-serif;font-size:48px;line-height:1;color:var(--accent);margin-bottom:14px;font-weight:900;letter-spacing:2px;}
+.modal-sub{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:20px;font-family:'Share Tech Mono',monospace;}
+.modal-id{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent);background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);padding:12px 24px;display:inline-block;margin-bottom:16px;letter-spacing:2px;}
+.modal-pending{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--accent2);background:rgba(255,61,0,0.06);border:1px solid rgba(255,61,0,0.2);padding:10px 18px;display:inline-block;}
+
+footer{text-align:center;padding:28px 24px 36px;color:var(--muted);font-size:11px;font-family:'Share Tech Mono',monospace;position:relative;z-index:1;line-height:2.2;border-top:1px solid rgba(0,255,136,0.08);margin-top:20px;letter-spacing:1px;}
+
+@media(max-width:768px){
+  .rounds-grid{grid-template-columns:1fr;gap:10px;padding:0 16px;}
+  .coord-grid{grid-template-columns:1fr;}
+  .pay-grid{grid-template-columns:1fr;}
+  .form-header{padding:22px 20px 18px;}
+  .form-body{padding:20px;}
+  .form-wrap,.rules-wrap,.prize-wrap,.coord-wrap{padding:0 16px;}
+  .rules-body{padding:20px;}
+}
+@media(max-width:500px){
+  .hero{padding:60px 16px 28px;}
+  .hero-title{font-size:clamp(32px,12vw,56px);}
+  .c2{grid-template-columns:1fr;}
+  .mf-row{grid-template-columns:1fr;}
+  .pay-toggle{gap:8px;}
+  .submit-btn{font-size:14px;padding:14px;}
+  .modal-title{font-size:36px;}
+  input,select{font-size:14px;padding:11px 14px;}
+  .rmodal-header{padding:18px 16px 14px;}
+  .rmodal-title{font-size:20px;}
+  .rmodal-body{padding:14px 16px 20px;}
+  .g-info-grid{grid-template-columns:1fr 1fr;}
+  .prize-cols{grid-template-columns:1fr!important;}
+}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<a class="back-btn" href="gaming-index.html">&#8592; BACK</a>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag anim-1">&#x1F3AE; &nbsp;BCA DEPARTMENT &nbsp;&#x2022;&nbsp; SMD COLLEGE</div>
+  <h1 class="hero-title anim-2">
+    <span class="line1">TECH VISTARA</span>
+    <span class="line2">GAMING</span>
+    <span class="line3">BGMI TOURNAMENT</span>
+  </h1>
+  <p class="hero-sub anim-3">27 MARCH 2026 &nbsp;&#x2022;&nbsp; SMD COLLEGE &nbsp;&#x2022;&nbsp; <span>REGISTER NOW</span></p>
+  <div class="info-pills anim-4">
+    <div class="info-pill"><span>&#x1F4B0;</span><span>Entry Fee <span class="val">&#8377;100</span></span></div>
+    <div class="info-pill"><span>&#x1F465;</span><span><span class="val">2 Players</span> / Team</span></div>
+    <div class="info-pill"><span>&#x1F3AE;</span><span><span class="val">2 Rounds</span></span></div>
+    <div class="info-pill hot"><span>&#x1F3C6;</span><span>1st Prize <span class="val">&#8377;1,000</span></span></div>
+  </div>
+</section>
+
+<!-- ROUNDS -->
+<section class="rounds-section">
+  <div class="sec-heading anim-5">// TOURNAMENT FORMAT //</div>
+  <p class="sec-sub anim-5">Tap to view full round details</p>
+  <div class="rounds-grid anim-6">
+    <div class="round-card" onclick="openRound(1)">
+      <div class="round-num">01</div>
+      <div class="round-icon">&#x1F30F;</div>
+      <div class="round-name">CLASSIC PUNCH</div>
+      <div class="round-subtitle">BATTLE ROYALE</div>
+      <div class="round-desc">2 intense matches — Sanhok &amp; Erangel. Top 4 teams qualify.</div>
+      <div class="click-hint">&#x25B6; View Rules</div>
+    </div>
+    <div class="round-card" onclick="openRound(2)">
+      <div class="round-num">02</div>
+      <div class="round-icon">&#x1F94A;</div>
+      <div class="round-name">KNOCKOUT ARENA</div>
+      <div class="round-subtitle">TDM FINALS</div>
+      <div class="round-desc">2v2 Team Deathmatch — Semi-Finals to Grand Final.</div>
+      <div class="click-hint">&#x25B6; View Rules</div>
+    </div>
+  </div>
+</section>
+
+<!-- ROUND MODALS -->
+<div class="rmodal-overlay" id="rmodal1" onclick="closeRound(event,1)">
+  <div class="rmodal"><div class="rmodal-top g1"></div><button class="rmodal-close" onclick="closeRoundBtn(1)">&#x2715;</button>
+    <div class="rmodal-header"><div class="rmodal-round-tag" style="color:var(--accent)">ROUND 01</div><div class="rmodal-title" style="color:var(--accent)">CLASSIC PUNCH</div></div>
+    <div class="rmodal-body">
+      <p class="g-modal-desc">Teams will compete in 2 intense Battle Royale matches. Points from both matches combined to determine top 4 qualifiers.</p>
+      <div class="g-sub-round">
+        <div class="g-sub-title">&#x1F5FA; Match 1 — Sanhok</div>
+        <div class="g-info-grid">
+          <div class="g-info-chip"><div class="g-chip-label">MAP</div><div class="g-chip-val">Sanhok</div></div>
+          <div class="g-info-chip"><div class="g-chip-label">PER KILL</div><div class="g-chip-val">1 PT</div></div>
+          <div class="g-info-chip"><div class="g-chip-label">CHICKEN DINNER</div><div class="g-chip-val gold">+5 PTS</div></div>
+        </div>
+      </div>
+      <div class="g-sub-round">
+        <div class="g-sub-title">&#x1F5FA; Match 2 — Erangel</div>
+        <div class="g-info-grid">
+          <div class="g-info-chip"><div class="g-chip-label">MAP</div><div class="g-chip-val">Erangel</div></div>
+          <div class="g-info-chip"><div class="g-chip-label">PER KILL</div><div class="g-chip-val">1 PT</div></div>
+          <div class="g-info-chip"><div class="g-chip-label">CHICKEN DINNER</div><div class="g-chip-val gold">+5 PTS</div></div>
+        </div>
+      </div>
+      <div class="g-modal-important"><div class="g-imp-title">QUALIFICATION</div><p style="font-size:13px;color:var(--muted);line-height:1.6;">Top 4 teams with highest combined points from both matches will advance to Round 2.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="rmodal-overlay" id="rmodal2" onclick="closeRound(event,2)">
+  <div class="rmodal" style="border-color:rgba(255,61,0,0.3);"><div class="rmodal-top g2"></div><button class="rmodal-close" onclick="closeRoundBtn(2)">&#x2715;</button>
+    <div class="rmodal-header"><div class="rmodal-round-tag" style="color:var(--accent2)">ROUND 02</div><div class="rmodal-title" style="color:var(--accent2)">KNOCKOUT ARENA</div></div>
+    <div class="rmodal-body">
+      <p class="g-modal-desc">High-speed 2v2 Team Deathmatch battles. Top 4 teams from Round 1 compete in Semi-Finals and Grand Final.</p>
+      <div class="g-sub-round red">
+        <div class="g-sub-title" style="color:var(--accent2);">Semi-Finals</div>
+        <ul class="g-rule-list">
+          <li>Team 1 vs Team 4 — Winner advances to Grand Final</li>
+          <li>Team 2 vs Team 3 — Winner advances to Grand Final</li>
+        </ul>
+      </div>
+      <div class="g-sub-round red">
+        <div class="g-sub-title" style="color:var(--accent3);">&#x1F3C6; Grand Final</div>
+        <ul class="g-rule-list">
+          <li>Semi-Final winners face off in the ultimate 2v2 TDM battle</li>
+          <li>One team crowned CHAMPION!</li>
+        </ul>
+      </div>
+      <div class="g-modal-important"><div class="g-imp-title">FORMAT</div><p style="font-size:13px;color:var(--muted);line-height:1.6;">Matches conducted using Advanced Room Cards in Esports Mode. Organizers' decision is final in all cases.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<section class="form-section">
+  <div class="form-wrap">
+    <div class="form-card anim-6">
+      <div class="form-card-top"></div>
+      <div class="form-header">
+        <h2>TEAM <span>REGISTRATION</span></h2>
+        <p>// ENTER YOUR SQUAD DETAILS — ONE SUBMISSION PER TEAM //</p>
+      </div>
+      <div class="form-body">
+        <div class="field-row c2">
+          <div class="field" id="f-tn"><label>TEAM NAME</label><input type="text" id="teamName" placeholder="e.g. BEAST SQUAD" maxlength="40" autocomplete="off"><div class="err-msg">> Enter team name</div></div>
+          <div class="field" id="f-col"><label>COLLEGE / INSTITUTION</label><input type="text" id="college" placeholder="Your college name" autocomplete="off"><div class="err-msg">> Enter college name</div></div>
+        </div>
+
+        <div class="sec-div"><div class="sec-lbl">PLAYER DETAILS</div><div class="sec-line"></div><div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);white-space:nowrap;">2 PLAYERS REQUIRED</div></div>
+
+        <div class="player-card">
+          <div class="ptag p1">&#x1F451; PLAYER 1 — SQUAD LEADER</div>
+          <div style="margin-bottom:10px;"><div class="field" id="f-m1n"><label>FULL NAME</label><input type="text" id="m1n" placeholder="Full name" autocomplete="name"><div class="err-msg">> Name required</div></div></div>
+          <div style="margin-bottom:10px;"><div class="field" id="f-m1ig"><label>IN-GAME NAME (IGN)</label><input type="text" id="m1ig" placeholder="Your BGMI username" autocomplete="off"><div class="err-msg">> IGN required</div></div></div>
+          <div class="mf-row">
+            <div class="field" id="f-m1p"><label>PHONE</label><input type="tel" id="m1p" placeholder="10-digit number" maxlength="10" inputmode="numeric"><div class="err-msg">> Valid phone needed</div></div>
+            <div class="field" id="f-m1e"><label>EMAIL</label><input type="email" id="m1e" placeholder="email@example.com"><div class="err-msg">> Valid email needed</div></div>
+          </div>
+        </div>
+
+        <div class="player-card player2">
+          <div class="ptag p2">&#x1F3AE; PLAYER 2</div>
+          <div style="margin-bottom:10px;"><div class="field" id="f-m2n"><label>FULL NAME</label><input type="text" id="m2n" placeholder="Full name" autocomplete="off"><div class="err-msg">> Name required</div></div></div>
+          <div style="margin-bottom:10px;"><div class="field" id="f-m2ig"><label>IN-GAME NAME (IGN)</label><input type="text" id="m2ig" placeholder="Your BGMI username" autocomplete="off"><div class="err-msg">> IGN required</div></div></div>
+          <div class="mf-row">
+            <div class="field" id="f-m2p"><label>PHONE</label><input type="tel" id="m2p" placeholder="10-digit number" maxlength="10" inputmode="numeric"><div class="err-msg">> Valid phone needed</div></div>
+            <div class="field" id="f-m2e"><label>EMAIL</label><input type="email" id="m2e" placeholder="email@example.com"><div class="err-msg">> Valid email needed</div></div>
+          </div>
+        </div>
+
+        <div class="sec-div"><div class="sec-lbl gold">PAYMENT</div><div class="sec-line"></div></div>
+
+        <input type="radio" name="paymode" id="radio-online" value="online" checked>
+        <input type="radio" name="paymode" id="radio-offline" value="offline">
+        <div class="pay-toggle">
+          <label class="pay-opt" for="radio-online"><div class="pay-opt-icon">&#x1F4F1;</div><div class="pay-opt-title">ONLINE</div><div class="pay-opt-sub">UPI / QR Code</div></label>
+          <label class="pay-opt" for="radio-offline"><div class="pay-opt-icon">&#x1F4B5;</div><div class="pay-opt-title">OFFLINE</div><div class="pay-opt-sub">Cash at Venue</div></label>
+        </div>
+        <div id="panel-online">
+          <div class="pay-grid">
+            <div class="qr-card">
+              <div class="qr-area"><svg width="48" height="48" viewBox="0 0 64 64" fill="none"><rect x="2" y="2" width="24" height="24" rx="2" stroke="#00ff88" stroke-width="1.5"/><rect x="8" y="8" width="12" height="12" rx="1" fill="rgba(0,255,136,0.2)"/><rect x="38" y="2" width="24" height="24" rx="2" stroke="#00ff88" stroke-width="1.5"/><rect x="44" y="8" width="12" height="12" rx="1" fill="rgba(0,255,136,0.2)"/><rect x="2" y="38" width="24" height="24" rx="2" stroke="#00ff88" stroke-width="1.5"/><rect x="8" y="44" width="12" height="12" rx="1" fill="rgba(0,255,136,0.2)"/><rect x="38" y="38" width="6" height="6" fill="#00ff88" opacity="0.4"/><rect x="48" y="38" width="6" height="6" fill="#00ff88" opacity="0.4"/><rect x="38" y="48" width="6" height="6" fill="#00ff88" opacity="0.4"/><rect x="48" y="48" width="6" height="6" fill="#00ff88" opacity="0.4"/></svg>PASTE YOUR<br>UPI QR HERE</div>
+              <div class="qr-fee">&#8377;100</div><div class="qr-sub">PER TEAM</div>
+            </div>
+            <div>
+              <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px;font-family:'Share Tech Mono',monospace;">Scan QR &#8594; Pay <strong style="color:var(--accent)">&#8377;100</strong> &#8594; Enter TXN ID + Upload screenshot.</p>
+              <div class="field" id="f-txn"><label>TRANSACTION ID / UTR</label><input type="text" id="txnId" placeholder="e.g. 408729834901" autocomplete="off"><div class="err-msg">> Enter transaction ID</div></div>
+              <div style="margin-top:12px;"><label>PAYMENT SCREENSHOT</label>
+                <div class="upload-box" id="uploadBox"><input type="file" id="screenshot" accept="image/*" onchange="fileChosen(this)"><div style="font-size:24px;margin-bottom:6px;">&#x1F4F8;</div><div style="font-weight:600;font-size:13px;margin-bottom:4px;font-family:'Rajdhani',sans-serif;">Upload Screenshot</div><div style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;">Tap to select &middot; JPG or PNG</div><div class="upload-fname" id="uploadFname"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="panel-offline">
+          <div class="offline-box">
+            <div class="offline-icon">&#x1F4B5;</div>
+            <div class="offline-title">PAY AT VENUE</div>
+            <p class="offline-desc">Pay <strong style="color:var(--accent)">&#8377;100 cash</strong> at the event on arrival. Your slot is reserved after registration.</p>
+          </div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+          <span id="btnText">&#x1F3AE; &nbsp;JOIN THE BATTLE &nbsp;&#x25B6;</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+        <div class="submit-note">// Registration closes 25 March 2026 &nbsp;&#x2022;&nbsp; Confirmation after payment verification //</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOURNAMENT RULES -->
+<section class="rules-section">
+  <div class="rules-wrap">
+    <div class="sec-heading" style="margin-bottom:10px;">// TOURNAMENT RULES //</div>
+    <p class="sec-sub" style="margin-bottom:24px;">Read carefully before registering</p>
+    <div class="rules-card">
+      <div class="rules-top"></div>
+      <div class="rules-body">
+        <div class="rule-item">
+          <div class="rule-num">01</div>
+          <div><div class="rule-title">REGISTERED PLAYERS ONLY</div><div class="rule-desc">Only registered players/teams are allowed to participate. Each team must join the room on time — late entries may be disqualified.</div></div>
+        </div>
+        <div class="rule-item blue">
+          <div class="rule-num">02</div>
+          <div><div class="rule-title">MATCH SETUP</div><div class="rule-desc">Matches will be conducted using Advanced Room Cards in Esports Mode. Room details will be shared before each match.</div></div>
+        </div>
+        <div class="rule-item red">
+          <div class="rule-num">03</div>
+          <div><div class="rule-title">CONNECTION RULES</div><div class="rule-desc">Players must ensure stable internet connection. Disconnections or lag issues are the player's responsibility. No rematch for individual technical issues.</div></div>
+        </div>
+        <div class="rule-item gold">
+          <div class="rule-num">04</div>
+          <div><div class="rule-title">DEVICE RULES</div><div class="rule-desc">Only mobile devices allowed. No emulators, no tablets (if restricted by organizers). Violations = disqualification.</div></div>
+        </div>
+        <div class="rule-item red">
+          <div class="rule-num">05</div>
+          <div><div class="rule-title">FAIR PLAY — ZERO TOLERANCE</div><div class="rule-desc">Use of hacks, cheats, or third-party tools = <strong style="color:var(--red)">instant disqualification</strong>. Any suspicious activity will be monitored strictly.</div></div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-num">06</div>
+          <div><div class="rule-title">ORGANIZERS' DECISION</div><div class="rule-desc">Organizers' decision will be final in all disputes and cases. No arguments will be entertained during the event.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIZE -->
+<section class="prize-section">
+  <div class="prize-wrap">
+    <div class="sec-heading" style="margin-bottom:10px;">// PRIZE POOL //</div>
+    <p class="sec-sub" style="margin-bottom:24px;">Compete. Win. Dominate.</p>
+    <div class="prize-cols" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+      <div style="background:var(--card);border:1px solid rgba(255,215,0,0.25);padding:28px;text-align:center;position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));">
+        <div style="height:3px;background:linear-gradient(90deg,#ffd700,#ffec6e);position:absolute;top:0;left:0;right:0;"></div>
+        <div style="font-size:44px;margin-bottom:10px;">&#x1F3C6;</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:#ffd700;letter-spacing:2px;font-weight:700;">CHAMPION</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:36px;color:#ffd700;margin-top:8px;font-weight:900;">&#8377;1,000</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px;font-family:'Share Tech Mono',monospace;">CASH PRIZE</div>
+      </div>
+      <div style="background:var(--card);border:1px solid rgba(192,192,192,0.2);padding:28px;text-align:center;position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));">
+        <div style="height:3px;background:linear-gradient(90deg,#c0c0c0,#e8e8e8);position:absolute;top:0;left:0;right:0;"></div>
+        <div style="font-size:44px;margin-bottom:10px;">&#x1F948;</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:#c0c0c0;letter-spacing:2px;font-weight:700;">RUNNER UP</div>
+        <div style="font-size:14px;color:var(--muted);margin-top:12px;font-family:'Share Tech Mono',monospace;line-height:1.7;">Certificates of Achievement<br>+ Recognition</div>
+      </div>
+    </div>
+    <div style="background:var(--card);border:1px solid rgba(0,255,136,0.12);padding:18px 24px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;">
+      &#x1F3AD; Prize distribution at end of tournament &nbsp;&#x2022;&nbsp; Registration fee: &#8377;100 per team
+    </div>
+  </div>
+</section>
+
+<!-- COORDINATORS -->
+<section class="coord-section">
+  <div class="coord-wrap">
+    <div class="sec-heading" style="margin-bottom:10px;">// EVENT COORDINATORS //</div>
+    <p class="sec-sub" style="margin-bottom:24px;">Contact for queries</p>
+    <div style="max-width:600px;margin:0 auto;">
+      <div class="coord-group male" style="clip-path:none;">
+        <div class="coord-group-title">&#x1F3AE; EVENT COORDINATORS</div>
+        <div class="coord-person"><div class="coord-avatar">&#x1F468;</div><div><div class="coord-name">Imran Khan</div><div class="coord-phone"><a href="tel:8880543438">8880543438</a></div></div></div>
+        <div class="coord-person"><div class="coord-avatar">&#x1F468;</div><div><div class="coord-name">Nithyananda</div><div class="coord-phone"><a href="tel:9980776157">9980776157</a></div></div></div>
+        <div class="coord-person"><div class="coord-avatar">&#x1F468;</div><div><div class="coord-name">Nithish</div><div class="coord-phone"><a href="tel:8431216296">8431216296</a></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUCCESS MODAL -->
+<div class="modal" id="successModal">
+  <div class="modal-inner">
+    <span class="modal-emoji">&#x1F3AE;</span>
+    <div class="modal-title">LOCKED IN!</div>
+    <p class="modal-sub" id="successMsg">Registration received!</p>
+    <div class="modal-id" id="modalId">REG ID: --</div><br>
+    <div class="modal-pending" id="modalPending">&#x23F3; &nbsp;Pending payment confirmation. You will receive email once confirmed.</div>
+  </div>
+</div>
+
+<footer>TECH VISTARA GAMING &nbsp;&#x2022;&nbsp; BCA DEPARTMENT &nbsp;&#x2022;&nbsp; SMD COLLEGE<br>27 MARCH 2026 &nbsp;&#x2022;&nbsp; BGMI TOURNAMENT &nbsp;&#x2022;&nbsp; &#169; 2026</footer>
+
+<script>
+var EJS_PUBLIC_KEY = 'Dzzl9VfrZ0QoHZsVq';
+var EJS_SERVICE_ID = 'service_8qqj4n7';
+var EJS_ADMIN_TEMPLATE_ID = 'template_i1l7pnd';
+var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz8mqvwr-fqGeRWUguHpXPcUg2JJJJropH6T9bGosZ3JMXeJ-s8esY25v6-kbjt8sDceg/exec';
+
+function openRound(n){document.getElementById('rmodal'+n).classList.add('show');document.body.style.overflow='hidden';}
+function closeRound(e,n){if(e.target===document.getElementById('rmodal'+n)){document.getElementById('rmodal'+n).classList.remove('show');document.body.style.overflow='';}}
+function closeRoundBtn(n){document.getElementById('rmodal'+n).classList.remove('show');document.body.style.overflow='';}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){[1,2].forEach(function(n){document.getElementById('rmodal'+n).classList.remove('show');});document.body.style.overflow='';}});
+
+function fileChosen(inp){if(inp.files[0]){document.getElementById('uploadBox').classList.add('done');var fn=document.getElementById('uploadFname');fn.style.display='block';fn.textContent='> '+inp.files[0].name;}}
+function setErr(id,show){var el=document.getElementById(id);if(el){show?el.classList.add('err'):el.classList.remove('err');}}
+function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
+function validPhone(p){return /^[6-9]\d{9}$/.test(p);}
+
+var registeredTeams = [];
+
+function handleSubmit(){
+  var isOffline = document.getElementById('radio-offline').checked;
+  var teamName = document.getElementById('teamName').value.trim();
+  var ok = true;
+
+  var tnErrEl = document.querySelector('#f-tn .err-msg');
+  if(registeredTeams.indexOf(teamName.toLowerCase()) !== -1){
+    setErr('f-tn', true);
+    if(tnErrEl) tnErrEl.textContent = '> Team name already taken!';
+    document.getElementById('teamName').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  if(tnErrEl) tnErrEl.textContent = '> Enter team name';
+
+  [{id:'f-tn',val:teamName},
+   {id:'f-col',val:document.getElementById('college').value.trim()}
+  ].forEach(function(f){var e=!f.val;setErr(f.id,e);if(e)ok=false;});
+
+  // Player 1
+  var p1n=document.getElementById('m1n').value.trim();
+  var p1ig=document.getElementById('m1ig').value.trim();
+  var p1p=document.getElementById('m1p').value.trim();
+  var p1e=document.getElementById('m1e').value.trim();
+  setErr('f-m1n',!p1n);if(!p1n)ok=false;
+  setErr('f-m1ig',!p1ig);if(!p1ig)ok=false;
+  setErr('f-m1p',!validPhone(p1p));if(!validPhone(p1p))ok=false;
+  setErr('f-m1e',!validEmail(p1e));if(!validEmail(p1e))ok=false;
+
+  // Player 2
+  var p2n=document.getElementById('m2n').value.trim();
+  var p2ig=document.getElementById('m2ig').value.trim();
+  var p2p=document.getElementById('m2p').value.trim();
+  var p2e=document.getElementById('m2e').value.trim();
+  setErr('f-m2n',!p2n);if(!p2n)ok=false;
+  setErr('f-m2ig',!p2ig);if(!p2ig)ok=false;
+  setErr('f-m2p',!validPhone(p2p));if(!validPhone(p2p))ok=false;
+  setErr('f-m2e',!validEmail(p2e));if(!validEmail(p2e))ok=false;
+
+  if(!isOffline){
+    var txn=document.getElementById('txnId').value.trim();
+    setErr('f-txn',!txn);if(!txn)ok=false;
+    if(!document.getElementById('screenshot').files.length){document.getElementById('uploadBox').style.borderColor='var(--red)';ok=false;}
+  }
+
+  if(!ok){var first=document.querySelector('.err');if(first)first.scrollIntoView({behavior:'smooth',block:'center'});return;}
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('btnText').textContent = 'REGISTERING...';
+  document.getElementById('spinner').style.display = 'block';
+
+  var regId = 'TVG' + Date.now().toString().slice(-6);
+  var leaderEmail = p1e;
+  var leaderName = p1n;
+
+  var params = {
+    reg_id: regId,
+    team_name: teamName,
+    college: document.getElementById('college').value.trim(),
+    payment_mode: isOffline ? 'Offline (Cash at Venue)' : 'Online (UPI)',
+    txn_id: isOffline ? 'N/A' : document.getElementById('txnId').value.trim(),
+    payment_status: 'PENDING',
+    p1_name: p1n, p1_ign: p1ig, p1_phone: p1p, p1_email: p1e,
+    p2_name: p2n, p2_ign: p2ig, p2_phone: p2p, p2_email: p2e
+  };
+
+  // Save to Google Sheets
+  fetch(SHEETS_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(params)}).catch(function(){});
+
+  // Only admin email — NO student email until confirmed
+  emailjs.init(EJS_PUBLIC_KEY);
+  emailjs.send(EJS_SERVICE_ID, EJS_ADMIN_TEMPLATE_ID, params).catch(function(e){console.warn('Admin email error:', e);});
+
+  registeredTeams.push(teamName.toLowerCase());
+
+  document.getElementById('modalId').textContent = 'REG ID: ' + regId;
+  document.getElementById('successMsg').textContent = isOffline
+    ? 'Registration received! Pay Rs.100 cash at the venue. You will receive confirmation email once payment is verified.'
+    : 'Registration received! Payment under verification. You will receive confirmation email once verified.';
+  document.getElementById('successModal').classList.add('show');
+}
+</script>
+</body>
+</html>
